@@ -1,0 +1,6 @@
+numpy
+opencv-python
+pillow
+youtube-dl
+# youtube-upload
+git+https://github.com/tokland/youtube-upload.git
