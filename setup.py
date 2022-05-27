@@ -32,7 +32,10 @@ setup_kwargs = {
         'opencv-python',
         'youtube-dl',
         'pillow',
-        'git+https://github.com/tokland/youtube-upload.git'
+        'youtube-upload==0.8.0'
+    ],
+    "dependency_links": [
+        'git+https://github.com/tokland/youtube-upload.git#egg=youtube-upload-0.8.0'
     ]
 }
 
