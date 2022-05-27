@@ -37,7 +37,16 @@ The video, video ID is **EzqstWlMXyk**, youtube-drive produces in this example c
 
 Another file I uploaded to YouTube is [painting.jpg](https://github.com/lewangdev/youtube-drive/blob/main/examples/painting.jpg), it produces a video of size 127.5MB, and the original size is 476KB. The video can be viewed at https://youtu.be/gKhXk3IGW2s.
 
+I use opencv to produce mp4 video, if use ffmpeg with optimizing directly, the video maybe compress to a more smaller size.
+
+**AGAIN:** It is a silly idea, just for fun.
+
 ## Installation
+
+**Notice**:
+
+- I only test with **Python 3.8 & 3.9** on **MacOS** with ffmpeg installed.
+- If it works on your system, please feel free to let me know. Thanks.
 
 For development:
 
@@ -138,4 +147,4 @@ optional arguments:
 
 ## The difference between **youtube-drive** and **YouTubeDrive**
 
-I add 4 bytes at the beginning for the file for easily padding to video frames
+I add 4 bytes for representing data length at the beginning for the file for easily padding to video frames
