@@ -39,6 +39,8 @@ Another file I uploaded to YouTube is [painting.jpg](https://github.com/lewangde
 
 ## Installation
 
+For development:
+
 ```sh
 git clone https://github.com/lewangdev/youtube-drive.git
 cd youtube-drive
@@ -47,12 +49,54 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Or run directly from sources:
+
+```sh
+git clone https://github.com/lewangdev/youtube-drive.git
+cd youtube-drive
+python -m venv .venv
+. .venv/bin/activate
+python setup.py install
+```
+
+## Setup
+
+The first time you try to upload a video to YouTube, you will be asked to follow a URL in your browser to get an authentication token. If you have multiple channels for the logged in user, you will also be asked to pick which one you want to upload the videos to
+
+You now must create and use your own OAuth 2.0 file, it's a free service. Steps:
+
+Go to the [Google Cloud Console](https://console.cloud.google.com/).
+
+- Create project.
+- Side menu: APIs & Services -> OAuth consent screen: Create app and add the test user you will updoad videos to.
+- Side menu: APIs & Services -> Enabled API & services -> ENABLED API AND SERVICES -> Search `youtube` -> Choose `YouTube Data API v3` and enable it.
+- Side menu: APIs & Services -> Credentials -> Create Credentials -> OAuth client ID: Application type choose `Desktop app`.
+- Download JSON: Under the section "OAuth 2.0 client IDs". Save the file to your local system.
+  Use this JSON as your credentials file: copy it to ~/.client_secrets.json.
+  Note: client_secrets.json is a file you can download from the developer console, the credentials file is something auto generated after the first time the script is run and the google account sign in is followed, the file is stored at ~/.youtube-upload-credentials.json.
+
 ## Usage
 
 **Commands:**
 
 ```sh
 python -m youtube_drive -h
+usage: youtube-drive [-h] {upload,up,retrieve,r} ...
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Commands:
+  {upload,up,retrieve,r}
+    upload (up)         Upload a file to YouTube
+    retrieve (r)        Retrieve a video from YouTube save as <filename>
+
+```
+
+If you install from source, you can run the script directly:
+
+```sh
+youtube-drive -h
 usage: youtube-drive [-h] {upload,up,retrieve,r} ...
 
 optional arguments:
