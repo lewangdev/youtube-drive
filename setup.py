@@ -24,7 +24,7 @@ setup_kwargs = {
     ],
     "entry_points": {
         'console_scripts': [
-            'youtube-drive = youtube_drive.main:main'
+            'youtube-drive = youtube_drive.main:run'
         ],
     },
     "install_requires": [

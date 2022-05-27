@@ -110,6 +110,10 @@ def main(args):
     arguments.handle(arguments)
 
 
+def run():
+    main(sys.argv[1:])
+
+
 if __name__ == '__main__':
     # video_id = youtebe_upload("./examples/upload.mp4")
     # print(f"video_id: {video_id}")

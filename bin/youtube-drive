@@ -6,3 +6,6 @@ if __name__ == '__main__':
     import os.path
     import sys
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+
+    from youtube_upload import main    
+    main.run()
