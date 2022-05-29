@@ -1,4 +1,3 @@
-from ast import alias, arguments
 import tempfile
 import os
 import sys
