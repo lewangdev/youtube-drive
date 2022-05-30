@@ -79,27 +79,60 @@ def cmd_retrieve(args):
     youtube_retrieve(args.video_id, args.o)
 
 
+def cmd_encode(args):
+    youtube_codec.encode(args.i, args.video_filename, args.video_fps)
+
+
+def cmd_decode(args):
+    youtube_codec.decode(args.i, args.filename)
+
+
 def main(args):
     parser = argparse.ArgumentParser('youtube-drive')
-    subparsers = parser.add_subparsers(title="Commands")
+    subparsers = parser.add_subparsers(title="commands")
 
-    upload_parser = subparsers.add_parser('upload', aliases=['up'], help='Upload a file to YouTube')
+    encode_parser = subparsers.add_parser('encode', aliases=['en'], help='encode a file to mp4 video')
+    encode_parser.add_argument('-i',
+                               action='store',
+                               metavar="input_filename",
+                               help='encode file <input_filename> to a video')
+    encode_parser.add_argument('--video-fps',
+                               action='store',
+                               metavar="video_fps",
+                               default=20,
+                               type=int,
+                               help='set video fps, default value is 20')
+    encode_parser.add_argument('video_filename',
+                               action='store',
+                               help='save the video to this filename')
+    encode_parser.set_defaults(handle=cmd_encode)
+
+    decode_parser = subparsers.add_parser('decode', aliases=['de'], help='decode a video to a file')
+    decode_parser.add_argument('-i',
+                               action='store',
+                               metavar="input_video_filename",
+                               help='decode the video <input_video_filename> to a file')
+    decode_parser.add_argument('filename',
+                               action='store',
+                               help='Save the output file to this filename')
+    decode_parser.set_defaults(handle=cmd_decode)
+
+    upload_parser = subparsers.add_parser('upload', aliases=['up'], help='upload a file to YouTube')
     upload_parser.add_argument('filename',
                                action='store',
-                               help='Encode file <filename> to a video and upload to YouTube')
+                               help='encode file <filename> to a video and upload to YouTube')
     upload_parser.set_defaults(handle=cmd_upload)
 
-    retrieve_parser = subparsers.add_parser(
-        "retrieve", aliases=['r'],
-        help="Retrieve a video from YouTube save as <filename>")
+    retrieve_parser = subparsers.add_parser("retrieve", aliases=['r'],
+                                            help="retrieve a video from YouTube save as <filename>")
     retrieve_parser.add_argument('--video-id',
                                  action='store',
                                  metavar="video_id",
-                                 help='Download YouTube video with <video_id>')
+                                 help='download YouTube video with <video_id>')
     retrieve_parser.add_argument('-o',
                                  action='store',
                                  metavar="filename",
-                                 help='Save file to <filename>')
+                                 help='save file to <filename>')
     retrieve_parser.set_defaults(handle=cmd_retrieve)
     arguments = parser.parse_args(args)
     if not hasattr(arguments, 'handle'):
