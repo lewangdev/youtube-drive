@@ -45,7 +45,7 @@ I use opencv to produce mp4 video, if use ffmpeg with optimizing directly, the v
 
 **Notice**:
 
-- I only test with **Python 3.8 & 3.9** on **MacOS** with ffmpeg installed.
+- I only test with **Python 3.8 & 3.9 & 3.10** on **MacOS** with ffmpeg installed.
 - If it works on your system, please feel free to let me know. Thanks.
 
 For development:
