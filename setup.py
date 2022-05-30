@@ -17,7 +17,7 @@ setup_kwargs = {
         'Topic :: Internet :: WWW/HTTP',
         'Development Status :: 4 - Beta',
         'Environment :: Console',
-        'License :: Apache-2.0 license',
+        'License :: OSI Approved :: Apache Software License',
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python :: 3',
