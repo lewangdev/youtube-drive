@@ -92,15 +92,17 @@ If you feel any difficulty to create OAuth 2.0 file, here is the video I made fo
 
 ```sh
 python -m youtube_drive -h
-usage: youtube-drive [-h] {upload,up,retrieve,r} ...
+usage: youtube-drive [-h] {encode,en,decode,de,upload,up,retrieve,r} ...
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
 
-Commands:
-  {upload,up,retrieve,r}
-    upload (up)         Upload a file to YouTube
-    retrieve (r)        Retrieve a video from YouTube save as <filename>
+commands:
+  {encode,en,decode,de,upload,up,retrieve,r}
+    encode (en)         encode a file to mp4 video
+    decode (de)         decode a video to a file
+    upload (up)         upload a file to YouTube
+    retrieve (r)        retrieve a video from YouTube save as <filename>
 
 ```
 
@@ -108,28 +110,30 @@ If you install from source, you can run the script directly:
 
 ```sh
 youtube-drive -h
-usage: youtube-drive [-h] {upload,up,retrieve,r} ...
+usage: youtube-drive [-h] {encode,en,decode,de,upload,up,retrieve,r} ...
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
 
-Commands:
-  {upload,up,retrieve,r}
-    upload (up)         Upload a file to YouTube
-    retrieve (r)        Retrieve a video from YouTube save as <filename>
+commands:
+  {encode,en,decode,de,upload,up,retrieve,r}
+    encode (en)         encode a file to mp4 video
+    decode (de)         decode a video to a file
+    upload (up)         upload a file to YouTube
+    retrieve (r)        retrieve a video from YouTube save as <filename>
 
 ```
 
 **Upload:**
 
 ```sh
-python -m youtube_drive upload -h
+python -m youtube_drive up -h
 usage: youtube-drive upload [-h] filename
 
 positional arguments:
-  filename    Encode file <filename> to a video and upload to YouTube
+  filename    encode file <filename> to a video and upload to YouTube
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 
 ```
@@ -140,11 +144,43 @@ optional arguments:
 python -m youtube_drive r -h
 usage: youtube-drive retrieve [-h] [--video-id video_id] [-o filename]
 
-optional arguments:
+options:
   -h, --help           show this help message and exit
-  --video-id video_id  Download YouTube video with <video_id>
-  -o filename          Save file to <filename>
+  --video-id video_id  download YouTube video with <video_id>
+  -o filename          save file to <filename>
 
+```
+
+**Local Encode:**
+
+```sh
+python -m youtube_drive en -h
+usage: youtube-drive encode [-h] [-i input_filename] [--video-fps video_fps] video_filename
+
+positional arguments:
+  video_filename        save the video to this filename
+
+options:
+  -h, --help            show this help message and exit
+  -i input_filename     encode file <input_filename> to a video
+  --video-fps video_fps
+                        set video fps, default value is 20
+
+```
+
+**Local Decode:**
+
+```
+python -m youtube_drive de -h
+usage: youtube-drive decode [-h] [-i input_video_filename] filename
+
+positional arguments:
+  filename              Save the output file to this filename
+
+options:
+  -h, --help            show this help message and exit
+  -i input_video_filename
+                        decode the video <input_video_filename> to a file
 ```
 
 ## The difference between **youtube-drive** and **YouTubeDrive**

@@ -15,7 +15,7 @@ def normal(x):
     return x/255
 
 
-def encode(infile_path, outvideo_path, num_cols_per_frame=64, num_rows_per_frame=36):
+def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_per_frame=36):
     data_bytes = np.fromfile(infile_path, dtype=np.uint8)
     len_of_data = len(data_bytes)
     num_bytes_per_row = int(num_cols_per_frame * 3 / 8)
@@ -32,7 +32,6 @@ def encode(infile_path, outvideo_path, num_cols_per_frame=64, num_rows_per_frame
 
     # Vedio: size=(1280, 720), fps=20
     size = (num_cols_per_frame * 20, num_rows_per_frame * 20)
-    fps = 20
 
     video = cv2.VideoWriter(outvideo_path, cv2.VideoWriter_fourcc(
         *'mp4v'), fps, size)
