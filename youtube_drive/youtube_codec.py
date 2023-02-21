@@ -29,13 +29,9 @@ def encrypt_data_aes(data: bytes, key: bytes) -> bytes:
 
 
 def decrypt_data_aes(data: bytes, key: bytes) -> bytes:
-    # Base 64 decode the result
     raw = base64.urlsafe_b64decode(data)
-
-    # Extract 16 byte initialization vector
     nonce, tag, ciphertext = raw[:16], raw[16:32], raw[32:]
 
-    # Decrypt text with user's secret key (256 bit AES/CBC/PKCS5Padding) and initialization vector
     cipher = AES.new(key, AES.MODE_EAX, nonce)
     clear_data = cipher.decrypt_and_verify(ciphertext, tag)
     return clear_data
