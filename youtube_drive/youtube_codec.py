@@ -4,10 +4,10 @@ import cv2
 
 import base64
 from Crypto.Cipher import AES
-import keys
+import config
 
-
-KEY = getattr(keys, 'encryption_key', 'DefaultEncryptionKey').encode("ascii")[:16]
+ENABLE_ENCRYPTION = getattr(config, 'enable_encryption', False)
+KEY = getattr(config, 'encryption_key', 'DefaultEncryptionKey').encode("ascii")[:16]
 
 
 def quotient_remainder(divident, divsor):
@@ -41,13 +41,11 @@ def decrypt_data_aes(data: bytes, key: bytes) -> bytes:
     return clear_data
 
 
-def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_per_frame=36, encrypt=False, key=None):
+def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_per_frame=36, encrypt=ENABLE_ENCRYPTION, key=KEY):
     fd = open(infile_path, 'rb')
     raw_data_bytes = fd.read()
     if encrypt:
-        if key:
-            KEY = key.encode("ascii")[:16]
-        raw_data_bytes = encrypt_data_aes(raw_data_bytes, KEY)
+        raw_data_bytes = encrypt_data_aes(raw_data_bytes, key)
     data_bytes = np.frombuffer(raw_data_bytes, dtype=np.uint8)
     len_of_data = len(data_bytes)
     num_bytes_per_row = int(num_cols_per_frame * 3 / 8)
@@ -82,7 +80,7 @@ def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_p
     fd.close()
 
 
-def decode(invideo_path, outfile_path, decrypt=False, key=None):
+def decode(invideo_path, outfile_path, decrypt=ENABLE_ENCRYPTION, key=KEY):
     i = 0
     step = 20
     data_bits_list = []
@@ -103,9 +101,7 @@ def decode(invideo_path, outfile_path, decrypt=False, key=None):
     len_of_data = int.from_bytes(data_bytes[:4], byteorder='big')
     data_bytes_retrieved = data_bytes[4:len_of_data+4].tobytes()
     if decrypt:
-        if key:
-            KEY = key.encode("ascii")[:16]
-        data_bytes_retrieved = decrypt_data_aes(data_bytes_retrieved, KEY)
+        data_bytes_retrieved = decrypt_data_aes(data_bytes_retrieved, key)
     fd = open(outfile_path, 'wb')
     fd.write(data_bytes_retrieved)
     fd.close()

@@ -80,10 +80,14 @@ def cmd_retrieve(args):
 
 
 def cmd_encode(args):
+    if args.encrypt and args.key is not None:
+        args.key = str(args.key).encode("ascii")[:16]
     youtube_codec.encode(args.i, args.video_filename, args.video_fps, args.encrypt, args.key)
 
 
 def cmd_decode(args):
+    if args.decrypt and args.key is not None:
+        args.key = str(args.key).encode("ascii")[:16]
     youtube_codec.decode(args.i, args.filename, args.decrypt, args.key)
 
 
