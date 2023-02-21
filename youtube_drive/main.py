@@ -80,11 +80,11 @@ def cmd_retrieve(args):
 
 
 def cmd_encode(args):
-    youtube_codec.encode(args.i, args.video_filename, args.video_fps)
+    youtube_codec.encode(args.i, args.video_filename, args.video_fps, args.encrypt, args.key)
 
 
 def cmd_decode(args):
-    youtube_codec.decode(args.i, args.filename)
+    youtube_codec.decode(args.i, args.filename, args.decrypt, args.key)
 
 
 def main(args):
@@ -105,6 +105,15 @@ def main(args):
     encode_parser.add_argument('video_filename',
                                action='store',
                                help='save the video to this filename')
+    encode_parser.add_argument('--encrypt',
+                                action='store_true',
+                                default=False,
+                                help='encrypt the file')
+    encode_parser.add_argument('--key',
+                                action='store',
+                                metavar="encryption_key",
+                                default=None,
+                                help='encryption key')
     encode_parser.set_defaults(handle=cmd_encode)
 
     decode_parser = subparsers.add_parser('decode', aliases=['de'], help='decode a video to a file')
@@ -115,6 +124,15 @@ def main(args):
     decode_parser.add_argument('filename',
                                action='store',
                                help='Save the output file to this filename')
+    decode_parser.add_argument('--decrypt',
+                               action='store_true',
+                               default=False,
+                               help='decrypt the file')
+    encode_parser.add_argument('--key',
+                                action='store',
+                                metavar="decryption_key",
+                                default=None,
+                                help='decryption key')
     decode_parser.set_defaults(handle=cmd_decode)
 
     upload_parser = subparsers.add_parser('upload', aliases=['up'], help='upload a file to YouTube')

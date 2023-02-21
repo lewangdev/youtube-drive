@@ -2,6 +2,13 @@ import numpy as np
 from PIL import Image
 import cv2
 
+import base64
+from Crypto.Cipher import AES
+import keys
+
+
+KEY = getattr(keys, 'encryption_key', 'DefaultEncryptionKey').encode("ascii")[:16]
+
 
 def quotient_remainder(divident, divsor):
     return divident // divsor, divident % divsor
@@ -15,8 +22,33 @@ def normal(x):
     return x/255
 
 
-def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_per_frame=36):
-    data_bytes = np.fromfile(infile_path, dtype=np.uint8)
+def encrypt_data_aes(data: bytes, key: bytes) -> bytes:
+    cipher = AES.new(key, AES.MODE_EAX)
+    ciphertext, tag = cipher.encrypt_and_digest(data)
+    return base64.urlsafe_b64encode(cipher.nonce + tag + ciphertext)
+
+
+def decrypt_data_aes(data: bytes, key: bytes) -> bytes:
+    # Base 64 decode the result
+    raw = base64.urlsafe_b64decode(data)
+
+    # Extract 16 byte initialization vector
+    nonce, tag, ciphertext = raw[:16], raw[16:32], raw[32:]
+
+    # Decrypt text with user's secret key (256 bit AES/CBC/PKCS5Padding) and initialization vector
+    cipher = AES.new(key, AES.MODE_EAX, nonce)
+    clear_data = cipher.decrypt_and_verify(ciphertext, tag)
+    return clear_data
+
+
+def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_per_frame=36, encrypt=False, key=None):
+    fd = open(infile_path, 'rb')
+    raw_data_bytes = fd.read()
+    if encrypt:
+        if key:
+            KEY = key.encode("ascii")[:16]
+        raw_data_bytes = encrypt_data_aes(raw_data_bytes, KEY)
+    data_bytes = np.frombuffer(raw_data_bytes, dtype=np.uint8)
     len_of_data = len(data_bytes)
     num_bytes_per_row = int(num_cols_per_frame * 3 / 8)
     num_bytes_per_frame = num_bytes_per_row * num_rows_per_frame
@@ -29,6 +61,8 @@ def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_p
         padding_bytes = np.full((num_bytes_last_frame_padding), 0, dtype=np.uint8)
         data_bytes = np.concatenate((len_bytes, data_bytes, padding_bytes))
         num_frames += 1
+    else:
+        data_bytes = np.concatenate((len_bytes, data_bytes))
 
     # Vedio: size=(1280, 720), fps=20
     size = (num_cols_per_frame * 20, num_rows_per_frame * 20)
@@ -45,9 +79,10 @@ def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_p
         # Scale image to (1280, 720)
         newimg = img.resize(size, Image.Resampling.BOX)
         video.write(np.asarray(newimg))
+    fd.close()
 
 
-def decode(invideo_path, outfile_path):
+def decode(invideo_path, outfile_path, decrypt=False, key=None):
     i = 0
     step = 20
     data_bits_list = []
@@ -66,11 +101,17 @@ def decode(invideo_path, outfile_path):
     data_bits = np.array(data_bits_list).reshape(len(data_bits_list) * 3, 1)
     data_bytes = np.packbits(data_bits)
     len_of_data = int.from_bytes(data_bytes[:4], byteorder='big')
-    data_bytes_retrieved = data_bytes[4:len_of_data]
-    data_bytes_retrieved.tofile(outfile_path)
+    data_bytes_retrieved = data_bytes[4:len_of_data+4].tobytes()
+    if decrypt:
+        if key:
+            KEY = key.encode("ascii")[:16]
+        data_bytes_retrieved = decrypt_data_aes(data_bytes_retrieved, KEY)
+    fd = open(outfile_path, 'wb')
+    fd.write(data_bytes_retrieved)
+    fd.close()
 
 
 if __name__ == '__main__':
-    # encode("./examples/painting.jpg", "./examples/upload.mp4")
-    # decode("./examples/DATA-20ABC70C-FF2C-4DDE-8B8F-C0E7C036ABA1-gKhXk3IGW2s.mp4", "./examples/painting-retrieved2.jpg")
+    # encode("../examples/painting.jpg", "../examples/upload.mp4")
+    # decode("../examples/upload.mp4", "../examples/painting-retrieved2.jpg")
     pass
