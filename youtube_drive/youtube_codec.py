@@ -4,7 +4,7 @@ import cv2
 
 import base64
 from Crypto.Cipher import AES
-import config
+from . import config
 
 ENABLE_ENCRYPTION = getattr(config, 'enable_encryption', False)
 KEY = getattr(config, 'encryption_key', 'DefaultEncryptionKey').encode("ascii")[:16]
