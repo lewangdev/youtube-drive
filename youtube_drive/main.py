@@ -132,7 +132,7 @@ def main(args):
                                action='store_true',
                                default=False,
                                help='decrypt the file')
-    encode_parser.add_argument('--key',
+    decode_parser.add_argument('--key',
                                 action='store',
                                 metavar="decryption_key",
                                 default=None,
