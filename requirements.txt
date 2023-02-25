@@ -4,3 +4,4 @@ pillow
 youtube-dl
 # youtube-upload
 git+https://github.com/tokland/youtube-upload.git
+PyCryptodome==3.17.0
