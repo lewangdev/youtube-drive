@@ -37,7 +37,8 @@ def decrypt_data_aes(data: bytes, key: bytes) -> bytes:
     return clear_data
 
 
-def encode(infile_path, outvideo_path, fps=20, num_cols_per_frame=64, num_rows_per_frame=36, encrypt=ENABLE_ENCRYPTION, key=KEY):
+def encode(infile_path, outvideo_path, encrypt=ENABLE_ENCRYPTION, key=KEY,
+           fps=20, num_cols_per_frame=64, num_rows_per_frame=36):
     fd = open(infile_path, 'rb')
     raw_data_bytes = fd.read()
     if encrypt:
